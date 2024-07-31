@@ -1,0 +1,93 @@
+-- Criação da GUI
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local OpenCloseButton = Instance.new("TextButton")
+local ESPButton = Instance.new("TextButton")
+
+-- Propriedades da GUI
+ScreenGui.Parent = game.CoreGui
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+MainFrame.Size = UDim2.new(0, 300, 0, 200)
+MainFrame.Visible = true
+MainFrame.ClipsDescendants = true
+MainFrame.BackgroundTransparency = 1
+MainFrame:TweenSize(UDim2.new(0, 300, 0, 200), Enum.EasingDirection.Out, Enum.EasingStyle.Bounce, 1, true)
+
+-- Animação de abertura
+local function openAnimation()
+    MainFrame.BackgroundTransparency = 1
+    MainFrame:TweenSize(UDim2.new(0, 300, 0, 200), Enum.EasingDirection.Out, Enum.EasingStyle.Bounce, 1, true)
+    wait(1)
+    MainFrame.BackgroundTransparency = 0
+end
+
+-- Botão de abrir/fechar
+OpenCloseButton.Name = "OpenCloseButton"
+OpenCloseButton.Parent = MainFrame
+OpenCloseButton.BackgroundColor3 = Color3.fromRGB(169, 169, 169)
+OpenCloseButton.Position = UDim2.new(0, 10, 0, 10)
+OpenCloseButton.Size = UDim2.new(0, 100, 0, 50)
+OpenCloseButton.Font = Enum.Font.SourceSans
+OpenCloseButton.Text = "Fechar"
+OpenCloseButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+OpenCloseButton.TextSize = 20
+OpenCloseButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = not MainFrame.Visible
+    if MainFrame.Visible then
+        OpenCloseButton.Text = "Fechar"
+        openAnimation()
+    else
+        OpenCloseButton.Text = "Abrir"
+    end
+end)
+
+-- Botão de ESP
+ESPButton.Name = "ESPButton"
+ESPButton.Parent = MainFrame
+ESPButton.BackgroundColor3 = Color3.fromRGB(169, 169, 169)
+ESPButton.Position = UDim2.new(0, 10, 0, 70)
+ESPButton.Size = UDim2.new(0, 100, 0, 50)
+ESPButton.Font = Enum.Font.SourceSans
+ESPButton.Text = "Ativar ESP"
+ESPButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+ESPButton.TextSize = 20
+ESPButton.MouseButton1Click:Connect(function()
+    -- Função ESP
+    local function createESP(player)
+        local highlight = Instance.new("Highlight")
+        highlight.Parent = player.Character
+        highlight.FillColor = Color3.fromRGB(0, 0, 255)
+        highlight.OutlineColor = Color3.fromRGB(0, 0, 255)
+    end
+
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= game.Players.LocalPlayer then
+            createESP(player)
+        end
+    end
+
+    game.Players.PlayerAdded:Connect(function(player)
+        if player ~= game.Players.LocalPlayer then
+            createESP(player)
+        end
+    end)
+end)
+
+-- Estilo arredondado
+local function roundify(guiObject)
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10)
+    corner.Parent = guiObject
+end
+
+roundify(MainFrame)
+roundify(OpenCloseButton)
+roundify(ESPButton)
+
+-- Exibir GUI
+ScreenGui.Enabled = true
